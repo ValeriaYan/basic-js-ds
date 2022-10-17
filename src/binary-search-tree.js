@@ -72,8 +72,76 @@ class BinarySearchTree {
     return null;
   }
 
-  remove(/*data*/) {
-    throw new NotImplementedError('Not implemented');
+  remove(data) {
+    if(this.rootNode == null) return null;
+    let parentNode = this.rootNode;
+    let current = this.rootNode;
+
+    while(current) {
+      if(data < current.data) {
+        parentNode = current;
+        current = current.left
+      }else if(data > current.data) {
+        parentNode = current;
+        current = current.right;
+      }else if(data == current.data) {
+        if(current == this.rootNode) {
+          if(!current.left && !current.right) {
+            this.rootNode = null;
+          }else if(!current.left && current.right) {
+            this.rootNode = current.right;
+          }else if(!current.right && current.left) {
+            this.rootNode = current.left;
+          }else if(current.left && current.right) {
+            let minFromRight = current.right;
+
+            while(minFromRight.left) {
+              minFromRight = minFromRight.left;
+            }
+
+            minFromRight.left = this.rootNode.left;
+            minFromRight.right.right = this.rootNode.right
+
+            this.rootNode = minFromRight;
+
+            let checkNode = this.rootNode.right;
+            while(checkNode.left && checkNode.left !== this.rootNode) {
+              checkNode = checkNode.left;
+            }
+
+            checkNode.left = null;
+          }
+        }else{
+          if(!current.left && !current.right) {
+            if(parentNode.left == current) {
+              parentNode.left = null;
+            }
+            if(parentNode.right == current) {
+              parentNode.right = null;
+            }
+          }else if(!current.left && current.right) {
+            if(parentNode.left == current) {parentNode.left = current.right;}
+            if(parentNode.right == current) {parentNode.right = current.right;}
+          }else if(!current.right && current.left) {
+            if(parentNode.left == current) {parentNode.left = current.left;}
+            if(parentNode.right == current) {parentNode.right = current.left;}
+          }else if(current.left && current.right){
+            let minFromRight = current.right;
+  
+            while(minFromRight.left) {
+              minFromRight = minFromRight.left;
+            }
+  
+            minFromRight.left = current.left;
+  
+            if(parentNode.left == current) {parentNode.left = minFromRight;}
+            if(parentNode.right == current) {parentNode.right = minFromRight;}
+          }
+        }
+        current = null;
+      }
+    }
+    // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
   }
 
@@ -105,6 +173,21 @@ class BinarySearchTree {
     return max;
   }
 }
+
+const tree = new BinarySearchTree();
+      tree.add(9);
+      tree.add(14);
+      tree.add(2);
+      tree.add(6);
+      tree.add(128);
+      tree.add(8);
+      tree.add(31);
+      tree.add(54);
+      tree.add(1);
+      tree.remove(14);
+      tree.remove(8);
+      tree.remove(9);
+      tree.has(54);
 
 module.exports = {
   BinarySearchTree
